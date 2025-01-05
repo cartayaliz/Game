@@ -20,7 +20,7 @@ GameCenter gc = new GameCenter(board, new List<Player> { player1, player2 });
 
 System.Console.WriteLine(gc.ToString());
 
-while (true)
+while (!gc.finishedGame)
 {
     var key = Console.ReadKey(true);
     if (key.Key == ConsoleKey.Enter)
@@ -52,3 +52,5 @@ while (true)
     System.Console.WriteLine(gc.ToString());
 
 }
+
+System.Console.WriteLine($"El usuario {gc.GetCurrentPlayer().ToString()} gano !!!");

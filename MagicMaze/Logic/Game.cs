@@ -16,6 +16,7 @@ namespace Logic
         {
             this.name = name;
             path = new List<(int, int)>();
+            isWinner = false;
             this.id = id;
         }
 
@@ -33,9 +34,16 @@ namespace Logic
 
         int currentPlayer { get; set; }
 
+        public bool finishedGame = false;
+
+        public Player GetCurrentPlayer()
+        {
+            return players[currentPlayer];
+        }
+
         public bool currentPlayerAction(int direction)
         {
-            return doAction(players[currentPlayer], direction);
+            return doAction(GetCurrentPlayer(), direction);
         }
 
         public bool doAction(Player p, int direction)
@@ -45,14 +53,21 @@ namespace Logic
             {
                 System.Console.WriteLine(x);
                 board.setPlayer(x.Value.Item1, x.Value.Item2, p);
+                if (p.isWinner)
+                {
+                    finishedGame = true;
+                }
                 return true;
             }
             return false;
+
         }
 
 
         public void nextTurn()
         {
+            if (finishedGame) return;
+
             currentPlayer++;
             if (currentPlayer == players.Count)
             {
@@ -76,6 +91,11 @@ namespace Logic
             this.currentPlayer = 0;
             this.players = players;
         }
+        void GameOver()
+        {
+
+        }
+
     }
 
 
@@ -124,6 +144,11 @@ namespace Logic
         public override string ToString()
         {
             return "+";
+        }
+        public override void Move(Player p)
+        {
+            base.Move(p);
+            p.isWinner = true;
         }
 
     }
