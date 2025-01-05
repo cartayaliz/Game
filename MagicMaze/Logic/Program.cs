@@ -10,6 +10,7 @@ Player player2 = new Player('a', 2, 2, 1);
 Board board = new Board(5);
 
 board.setPlayer(0, 4, player1);
+
 board.setPlayer(4, 3, player2);
 
 board.matrix[0, 0] = new CellObs(0, 0);
