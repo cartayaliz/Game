@@ -143,10 +143,10 @@ namespace Logic
             this.player = p;
         }
     }
-    class CellSpeed : Cell
+    class CellSpeed1 : Cell
     {
         bool used = false;
-        public CellSpeed(int x, int y) : base(x, y) { }
+        public CellSpeed1(int x, int y) : base(x, y) { }
         public override string ToString()
         {
             return "&";
@@ -160,6 +160,26 @@ namespace Logic
                 used = true;
             }
         }
+    }
+    class CellSpeed2 : Cell
+    {
+        bool used = false;
+        public CellSpeed2(int x, int y) : base(x, y) { }
+        public override string ToString()
+        {
+            return "&";
+        }
+        public override void Move(Player p)
+        {
+            base.Move(p);
+            if (!used)
+            {
+                p.speed--;
+                used = true;
+            }
+        }
+
+
     }
     class CellWinn : Cell
     {

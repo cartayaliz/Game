@@ -14,7 +14,8 @@ board.setPlayer(4, 3, player2);
 
 board.matrix[0, 0] = new CellObs(0, 0);
 board.matrix[4, 4] = new CellWinn(4, 4);
-board.matrix[3, 3] = new CellSpeed(3, 3);
+board.matrix[3, 3] = new CellSpeed1(3, 3);
+board.matrix[2, 2] = new CellSpeed2(2, 2);
 
 
 GameCenter gc = new GameCenter(board, new List<Player> { player1, player2 });
