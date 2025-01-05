@@ -3,8 +3,8 @@ using Logic;
 // GameCenter game = new GameCenter(5);
 // Console.WriteLine("Hi logic {0} !!!", game.number_of_players);
 
-Player player1 = new Player('b', 1, 1);
-Player player2 = new Player('a', 2, 2);
+Player player1 = new Player('b', 1, 1, 1);
+Player player2 = new Player('a', 2, 2, 1);
 
 
 Board board = new Board(5);
@@ -16,6 +16,7 @@ board.matrix[0, 0] = new CellObs(0, 0);
 board.matrix[4, 4] = new CellWinn(4, 4);
 board.matrix[3, 3] = new CellSpeed1(3, 3);
 board.matrix[2, 2] = new CellSpeed2(2, 2);
+board.matrix[1, 3] = new CellVision1(1, 3);
 
 
 GameCenter gc = new GameCenter(board, new List<Player> { player1, player2 });

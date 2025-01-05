@@ -11,20 +11,23 @@ namespace Logic
         public bool isWinner { get; set; }
         public int speed { get; set; }
 
+        public int visibility { get; set; } //Distancia Manhatan
+
         public List<(int, int)> path { get; set; }
 
-        public Player(char name = 'a', int id = 1, int speed = 1)
+        public Player(char name = 'a', int id = 1, int speed = 1, int visibility = 1)
         {
             this.name = name;
             path = new List<(int, int)>();
             isWinner = false;
             this.id = id;
             this.speed = speed;
+            this.visibility = visibility;
         }
 
         public override string ToString()
         {
-            return $"[{id}] {name} {speed}";
+            return $"[{id}] {name} {speed} {visibility}";
         }
 
     }
@@ -141,6 +144,15 @@ namespace Logic
         {
             p.path.Add((x, y));
             this.player = p;
+        }
+    }
+    class CellVision1 : Cell
+    {
+        public CellVision1(int x, int y) : base(x, y) { }
+
+        public override string ToString()
+        {
+            return "?";
         }
     }
     class CellSpeed1 : Cell
