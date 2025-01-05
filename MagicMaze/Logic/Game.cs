@@ -88,7 +88,7 @@ namespace Logic
 
         public virtual bool canMove(Player p, GameCenter gc)
         {
-            return player != null;
+            return player == null;
         }
 
         public virtual void RemovePlayer()
@@ -123,17 +123,14 @@ namespace Logic
         }
         public override string ToString()
         {
-            return "*";
+            return "+";
         }
 
     }
 
     class CellObs : Cell
     {
-        public CellObs(int x, int y) : base(x, y)
-        {
-
-        }
+        public CellObs(int x, int y) : base(x, y) { }
         public override bool canMove(Player p, GameCenter gc)
         {
             return false;

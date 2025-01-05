@@ -13,7 +13,7 @@ board.setPlayer(0, 4, player1);
 board.setPlayer(4, 3, player2);
 
 board.matrix[0, 0] = new CellObs(0, 0);
-board.matrix[4, 3] = new CellWinn(4, 3);
+board.matrix[4, 4] = new CellWinn(4, 4);
 
 GameCenter gc = new GameCenter(board, new List<Player> { player1, player2 });
 
