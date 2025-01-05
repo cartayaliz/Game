@@ -9,20 +9,22 @@ namespace Logic
         public int id { get; set; }
 
         public bool isWinner { get; set; }
+        public int speed { get; set; }
 
         public List<(int, int)> path { get; set; }
 
-        public Player(char name = 'a', int id = 1)
+        public Player(char name = 'a', int id = 1, int speed = 1)
         {
             this.name = name;
             path = new List<(int, int)>();
             isWinner = false;
             this.id = id;
+            this.speed = speed;
         }
 
         public override string ToString()
         {
-            return $"[{id}] {name}";
+            return $"[{id}] {name} {speed}";
         }
 
     }
@@ -33,6 +35,8 @@ namespace Logic
         public List<Player> players { get; set; }
 
         int currentPlayer { get; set; }
+
+        int currentMove = 0;
 
         public bool finishedGame = false;
 
@@ -49,13 +53,20 @@ namespace Logic
         public bool doAction(Player p, int direction)
         {
             var x = board.canMove(p, direction, this);
+
+
             if (x.HasValue)
             {
-                System.Console.WriteLine(x);
                 board.setPlayer(x.Value.Item1, x.Value.Item2, p);
+
                 if (p.isWinner)
                 {
                     finishedGame = true;
+                }
+                currentMove++;
+                if (currentMove >= p.speed)
+                {
+                    nextTurn();
                 }
                 return true;
             }
@@ -67,8 +78,8 @@ namespace Logic
         public void nextTurn()
         {
             if (finishedGame) return;
-
             currentPlayer++;
+            currentMove = 0;
             if (currentPlayer == players.Count)
             {
                 currentPlayer = 0;
@@ -91,10 +102,7 @@ namespace Logic
             this.currentPlayer = 0;
             this.players = players;
         }
-        void GameOver()
-        {
 
-        }
 
     }
 
@@ -133,6 +141,24 @@ namespace Logic
         {
             p.path.Add((x, y));
             this.player = p;
+        }
+    }
+    class CellSpeed : Cell
+    {
+        bool used = false;
+        public CellSpeed(int x, int y) : base(x, y) { }
+        public override string ToString()
+        {
+            return "&";
+        }
+        public override void Move(Player p)
+        {
+            base.Move(p);
+            if (!used)
+            {
+                p.speed++;
+                used = true;
+            }
         }
     }
     class CellWinn : Cell
