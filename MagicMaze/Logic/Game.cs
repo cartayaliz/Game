@@ -8,6 +8,9 @@ namespace Logic
         public char name { get; set; }
         public int id { get; set; }
 
+        public bool remember { get; set; }
+
+
         public bool isWinner { get; set; }
         public int speed { get; set; }
 
@@ -15,11 +18,12 @@ namespace Logic
 
         public List<(int, int)> path { get; set; }
 
-        public Player(char name = 'a', int id = 1, int speed = 1, int visibility = 1)
+        public Player(char name = 'a', int id = 1, int speed = 1, int visibility = 1, bool remember = false)
         {
             this.name = name;
             path = new List<(int, int)>();
             isWinner = false;
+            this.remember = remember;
             this.id = id;
             this.speed = speed;
             this.visibility = visibility;
@@ -50,11 +54,11 @@ namespace Logic
         public void Init(GameCenter gameCenter)
         {
             System.Console.WriteLine("<init>");
-            Console.WriteLine(gameCenter.ToString());
+            Refresh(gameCenter);
+            // Console.WriteLine(gameCenter.ToString());
         }
         public void Play(GameCenter gc)
         {
-            System.Console.WriteLine("play");
             while (!gc.finishedGame)
             {
                 var key = Console.ReadKey(true);
@@ -104,8 +108,35 @@ namespace Logic
         }
         public void Refresh(GameCenter gameCenter)
         {
-            // Console.Clear();
-            Console.WriteLine(gameCenter.ToString());
+            Console.Clear();
+            var player = gameCenter.GetCurrentPlayer();
+            var visible = gameCenter.board.PlayerVisibility(player);
+
+            string s = "";
+            s += $":> Jugador actual: {player.name} s({player.speed - gameCenter.currentMove}) v({player.visibility}) \n";
+
+            string table = "";
+            string topSeparator = "";
+            int n = gameCenter.board.n;
+            for (int i = 0; i < n + 2; i++)
+                topSeparator += '_';
+            string bottomSeparator = "";
+            for (int i = 0; i < n + 2; i++)
+                bottomSeparator += '-';
+            for (int i = 0; i < n; i++)
+            {
+                string column = "|";
+                for (int j = 0; j < n; j++)
+                {
+                    if (visible[i, j])
+                        column += gameCenter.board.matrix[i, j].ToString();
+                    else column += "*";
+                }
+                column += "|\n";
+                table += column;
+            }
+            s += topSeparator + "\n" + table + bottomSeparator + "\n";
+            System.Console.WriteLine(s);
         }
 
     }
@@ -123,7 +154,7 @@ namespace Logic
 
         int currentPlayer { get; set; }
 
-        int currentMove = 0;
+        public int currentMove = 0;
 
         public bool finishedGame = false;
 
@@ -247,7 +278,21 @@ namespace Logic
     }
     public class CellVision1 : Cell
     {
-        public CellVision1(int x, int y) : base(x, y, "?") { }
+        bool used = false;
+
+        int delta = 1;
+
+        public CellVision1(int x, int y, int delta = 1, string id = "?") : base(x, y, id) { this.delta = delta; }
+
+        public override void Move(Player p)
+        {
+            base.Move(p);
+            if (!used)
+            {
+                p.visibility += delta;
+                used = true;
+            }
+        }
     }
     public class CellSpeed1 : Cell
     {
@@ -353,6 +398,32 @@ namespace Logic
                 s += column;
             }
             return topSeparator + "\n" + s + bottomSeparator + "\n";
+        }
+
+        public bool[,] PlayerVisibility(Player p)
+        {
+            bool[,] result = new bool[n, n];
+            if (p.remember)
+            {
+                foreach (var item in p.path)
+                {
+                    result[item.Item1, item.Item2] = true;
+                }
+            }
+            var pos = playerPosition[p.id];
+            int x = pos.Item1; int y = pos.Item2;
+            for (int i = 0; i < n; i++)
+            {
+                for (int j = 0; j < n; j++)
+                {
+                    if (Math.Abs(x - i) <= p.visibility && Math.Abs(y - j) <= p.visibility)
+                    {
+                        result[i, j] = true;
+                    }
+                }
+            }
+            return result;
+
         }
 
         public (int, int)? canMove(Player p, int direction, GameCenter gc)
