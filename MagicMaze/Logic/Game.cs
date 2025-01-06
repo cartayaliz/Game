@@ -3,7 +3,7 @@ using System.Collections;
 
 namespace Logic
 {
-    class Player
+    public class Player
     {
         public char name { get; set; }
         public int id { get; set; }
@@ -32,9 +32,93 @@ namespace Logic
 
     }
 
-    class GameCenter
+    public interface IVisual
+    {
+        public void Init(GameCenter gameCenter);
+        public void Play(GameCenter gameCenter);
+        public void NextTurn(GameCenter gameCenter);
+
+        public void Winning(GameCenter gameCenter, Player player);
+        public void Refresh(GameCenter gameCenter);
+        public void Move(GameCenter gameCenter, int i, int j, int x, int y, Player player);
+
+
+    }
+    class BasicConsoleVisual : IVisual
+    {
+
+        public void Init(GameCenter gameCenter)
+        {
+            System.Console.WriteLine("<init>");
+            Console.WriteLine(gameCenter.ToString());
+        }
+        public void Play(GameCenter gc)
+        {
+            System.Console.WriteLine("play");
+            while (!gc.finishedGame)
+            {
+                var key = Console.ReadKey(true);
+                if (key.Key == ConsoleKey.UpArrow)
+                {
+                    gc.currentPlayerAction(0);
+                }
+                else if (key.Key == ConsoleKey.RightArrow)
+                {
+                    gc.currentPlayerAction(1);
+                }
+                else if (key.Key == ConsoleKey.DownArrow)
+                {
+                    gc.currentPlayerAction(2);
+                }
+                else if (key.Key == ConsoleKey.LeftArrow)
+                {
+                    gc.currentPlayerAction(3);
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+        }
+        public void Move(GameCenter gameCenter, int i, int j, int x, int y, Player player)
+        {
+            System.Console.WriteLine($"mov {i}, {j} -> {x}, {y} : {player.ToString()}");
+        }
+
+        public void NextTurn(GameCenter gameCenter)
+        {
+            System.Console.WriteLine("<next turn>");
+        }
+
+        public void Winning(GameCenter gameCenter, Player player)
+        {
+            if (player.isWinner)
+            {
+                Console.WriteLine($"{player} es el ganador!!!");
+            }
+            else
+            {
+                System.Console.WriteLine("Empate");
+            }
+        }
+        public void Refresh(GameCenter gameCenter)
+        {
+            // Console.Clear();
+            Console.WriteLine(gameCenter.ToString());
+        }
+
+    }
+
+
+
+
+    public class GameCenter
     {
         public Board board { get; set; }
+
+        IVisual visual { get; set; }
+
         public List<Player> players { get; set; }
 
         int currentPlayer { get; set; }
@@ -60,17 +144,28 @@ namespace Logic
 
             if (x.HasValue)
             {
+                var pos = board.playerPosition[p.id];
+                int i = pos.Item1;
+                int j = pos.Item2;
+
+                this.visual.Move(this, i, j, x.Value.Item1, x.Value.Item2, p);
+
                 board.setPlayer(x.Value.Item1, x.Value.Item2, p);
+
 
                 if (p.isWinner)
                 {
                     finishedGame = true;
+                    this.visual.Winning(this, p);
+                    return true;
                 }
                 currentMove++;
                 if (currentMove >= p.speed)
                 {
                     nextTurn();
                 }
+                this.visual.Refresh(this);
+
                 return true;
             }
             return false;
@@ -87,6 +182,7 @@ namespace Logic
             {
                 currentPlayer = 0;
             }
+            this.visual.NextTurn(this);
         }
 
         public override string ToString()
@@ -99,22 +195,24 @@ namespace Logic
             return s;
         }
 
-        public GameCenter(Board board, List<Player> players)
+        public GameCenter(Board board, List<Player> players, IVisual visual)
         {
             this.board = board;
             this.currentPlayer = 0;
             this.players = players;
+            this.visual = visual;
+            this.visual.Init(this);
         }
 
 
     }
 
-
-    class Cell
+    public class Cell
     {
         int x { get; set; }
         int y { get; set; }
 
+        public string id { get; set; }
         public Player? player { get; set; }
 
         public virtual bool canMove(Player p, GameCenter gc)
@@ -131,13 +229,14 @@ namespace Logic
         public override string ToString()
         {
             if (this.player != null) return this.player.name.ToString();
-            return " ";
+            return id;
         }
 
-        public Cell(int x, int y)
+        public Cell(int x, int y, string id = " ")
         {
             this.x = x;
             this.y = y;
+            this.id = id;
         }
 
         public virtual void Move(Player p)
@@ -146,62 +245,54 @@ namespace Logic
             this.player = p;
         }
     }
-    class CellVision1 : Cell
+    public class CellVision1 : Cell
     {
-        public CellVision1(int x, int y) : base(x, y) { }
-
-        public override string ToString()
-        {
-            return "?";
-        }
+        public CellVision1(int x, int y) : base(x, y, "?") { }
     }
-    class CellSpeed1 : Cell
+    public class CellSpeed1 : Cell
     {
         bool used = false;
-        public CellSpeed1(int x, int y) : base(x, y) { }
-        public override string ToString()
+        int delta = 1;
+        public CellSpeed1(int x, int y, int delta = 1, string id = "&") : base(x, y, id) { this.delta = delta; }
+        public override void Move(Player p)
         {
-            return "&";
+            base.Move(p);
+            if (!used)
+            {
+                p.speed += delta;
+                used = true;
+            }
+        }
+    }
+
+    public class CellBridge : Cell
+    {
+        bool used = false;
+        public CellBridge(int x, int y, string id = "=") : base(x, y, id) { }
+
+        public override bool canMove(Player p, GameCenter gc)
+        {
+            return !used;
         }
         public override void Move(Player p)
         {
             base.Move(p);
             if (!used)
             {
-                p.speed++;
                 used = true;
+                this.id = "X";
             }
         }
     }
-    class CellSpeed2 : Cell
+    public class CellSpeed2 : CellSpeed1
     {
-        bool used = false;
-        public CellSpeed2(int x, int y) : base(x, y) { }
-        public override string ToString()
-        {
-            return "&";
-        }
-        public override void Move(Player p)
-        {
-            base.Move(p);
-            if (!used)
-            {
-                p.speed--;
-                used = true;
-            }
-        }
-
-
+        public CellSpeed2(int x, int y) : base(x, y, -1, "$") { }
     }
-    class CellWinn : Cell
+    public class CellWinn : Cell
     {
-        public CellWinn(int x, int y) : base(x, y)
+        public CellWinn(int x, int y) : base(x, y, "+")
         {
 
-        }
-        public override string ToString()
-        {
-            return "+";
         }
         public override void Move(Player p)
         {
@@ -211,24 +302,20 @@ namespace Logic
 
     }
 
-    class CellObs : Cell
+    public class CellObs : Cell
     {
-        public CellObs(int x, int y) : base(x, y) { }
+        public CellObs(int x, int y) : base(x, y, "x") { }
         public override bool canMove(Player p, GameCenter gc)
         {
             return false;
         }
-        public override string ToString()
-        {
-            return "X";
-        }
     }
 
-    class Board
+    public class Board
     {
         public int n { get; set; }
         public Cell[,] matrix { get; set; }
-        Dictionary<int, (int, int)> playerPosition { get; set; }
+        public Dictionary<int, (int, int)> playerPosition { get; set; }
         public int[] di = { -1, 0, 1, 0 };
         public int[] dj = { 0, 1, 0, -1 };
         public Board(int n)

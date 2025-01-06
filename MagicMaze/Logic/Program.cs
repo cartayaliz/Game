@@ -1,7 +1,4 @@
-﻿// See https://aka.ms/new-console-template for more information 
-using Logic;
-// GameCenter game = new GameCenter(5);
-// Console.WriteLine("Hi logic {0} !!!", game.number_of_players);
+﻿using Logic;
 
 Player player1 = new Player('b', 1, 1, 1);
 Player player2 = new Player('a', 2, 2, 1);
@@ -18,40 +15,11 @@ board.matrix[4, 4] = new CellWinn(4, 4);
 board.matrix[3, 3] = new CellSpeed1(3, 3);
 board.matrix[2, 2] = new CellSpeed2(2, 2);
 board.matrix[1, 3] = new CellVision1(1, 3);
+board.matrix[1, 1] = new CellBridge(1, 1);
 
 
-GameCenter gc = new GameCenter(board, new List<Player> { player1, player2 });
+BasicConsoleVisual game = new BasicConsoleVisual();
 
+GameCenter gc = new GameCenter(board, new List<Player> { player1, player2 }, game);
 
-System.Console.WriteLine(gc.ToString());
-
-while (!gc.finishedGame)
-{
-    var key = Console.ReadKey(true);
-    if (key.Key == ConsoleKey.UpArrow)
-    {
-        gc.currentPlayerAction(0);
-    }
-    else if (key.Key == ConsoleKey.RightArrow)
-    {
-        gc.currentPlayerAction(1);
-    }
-    else if (key.Key == ConsoleKey.DownArrow)
-    {
-        gc.currentPlayerAction(2);
-    }
-    else if (key.Key == ConsoleKey.LeftArrow)
-    {
-        gc.currentPlayerAction(3);
-    }
-    else
-    {
-        break;
-    }
-
-    Console.Clear();
-    System.Console.WriteLine(gc.ToString());
-
-}
-
-System.Console.WriteLine($"El usuario {gc.GetCurrentPlayer().ToString()} gano !!!");
+game.Play(gc);
