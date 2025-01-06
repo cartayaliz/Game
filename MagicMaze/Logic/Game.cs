@@ -35,6 +35,20 @@ namespace Logic
         }
 
     }
+    public class PlayerExplorador : Player
+    {
+        public PlayerExplorador(char name = 'E') : base(name, 1, 2, 2, false) { }
+    }
+    public class PlayerBuho : Player
+    {
+        public PlayerBuho(char name = 'B') : base(name, 2, 2, 1, true) { }
+    }
+    public class PlayerCorrecamino : Player
+    {
+        public PlayerCorrecamino(char name = 'C') : base(name, 3, 3, 1, false) { }
+    }
+
+
 
     public interface IVisual
     {
@@ -140,10 +154,6 @@ namespace Logic
         }
 
     }
-
-
-
-
     public class GameCenter
     {
         public Board board { get; set; }
@@ -237,7 +247,6 @@ namespace Logic
 
 
     }
-
     public class Cell
     {
         int x { get; set; }
@@ -309,7 +318,6 @@ namespace Logic
             }
         }
     }
-
     public class CellBridge : Cell
     {
         bool used = false;
@@ -346,7 +354,6 @@ namespace Logic
         }
 
     }
-
     public class CellObs : Cell
     {
         public CellObs(int x, int y) : base(x, y, "x") { }
@@ -355,7 +362,6 @@ namespace Logic
             return false;
         }
     }
-
     public class Board
     {
         public int n { get; set; }
