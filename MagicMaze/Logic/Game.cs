@@ -31,7 +31,6 @@ namespace Logic
         public bool doAction(Player p, int direction)
         {
             var x = board.canMove(p, direction, this);
-
             if (x.HasValue)
             {
                 var pos = board.playerPosition[p.id];
