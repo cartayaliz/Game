@@ -16,7 +16,7 @@ board.matrix[0, 0] = new CellObs(0, 0);
 board.matrix[19, 19] = new CellWinn(19, 19);
 board.matrix[3, 3] = new CellSpeed1(3, 3);
 board.matrix[2, 2] = new CellSpeed2(2, 2);
-board.matrix[1, 3] = new CellVision1(1, 3);
+board.matrix[1, 3] = new CellVision(1, 3);
 board.matrix[1, 1] = new CellBridge(1, 1);
 
 
