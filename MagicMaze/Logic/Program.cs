@@ -1,5 +1,6 @@
 ﻿using Logic;
 
+
 Player player1 = new PlayerBuho();
 Player player2 = new PlayerCorrecamino();
 Player player3 = new PlayerExplorador();
@@ -25,3 +26,4 @@ BasicConsoleVisual game = new BasicConsoleVisual();
 GameCenter gc = new GameCenter(board, new List<Player> { player1, player2, player3 }, game);
 
 game.Play(gc);
+
