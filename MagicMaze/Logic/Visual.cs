@@ -10,10 +10,17 @@ namespace Logic
         public void Play(GameCenter gameCenter);
         public void NextTurn(GameCenter gameCenter);
 
+
+
         public void Winning(GameCenter gameCenter, Player player);
         public void Refresh(GameCenter gameCenter);
         public void Move(GameCenter gameCenter, int i, int j, int x, int y, Player player);
 
+        public void canNotMove(GameCenter gameCenter, Player player, int direction);
+
+        public void canNotCallHability(GameCenter gameCenter, Player player, int index, Hability? hability);
+
+        public void callHability(GameCenter gameCenter, Player player, int index, Hability? hability);
 
     }
 
@@ -47,10 +54,15 @@ namespace Logic
                 {
                     gc.currentPlayerAction(3);
                 }
-                // else if (key.Key == ConsoleKey.ctrl) shift fn alt tab    
+                else if (key.Key == ConsoleKey.Q)
+                {
+                    System.Console.WriteLine("call habl");
+                    gc.currentPlayerActivatehability(0);
+                }
+                // else if (key.Key == ConsoleKey.E)
                 // {
 
-                // }    
+                // }
                 else
                 {
                     break;
@@ -81,7 +93,7 @@ namespace Logic
         }
         public void Refresh(GameCenter gameCenter)
         {
-            Console.Clear();
+            // Console.Clear();
             var player = gameCenter.GetCurrentPlayer();
             var visible = gameCenter.board.PlayerVisibility(player);
 
@@ -112,5 +124,20 @@ namespace Logic
             System.Console.WriteLine(s);
         }
 
+        public void canNotMove(GameCenter gameCenter, Player player, int direction)
+        {
+            System.Console.WriteLine($"El user {player} no se puede mover para {direction}");
+        }
+
+        public void canNotCallHability(GameCenter gameCenter, Player player, int index, Hability? hability)
+        {
+            System.Console.WriteLine($"El player {player} no se puede ejecutar la habilidad {index}: {hability}");
+        }
+
+        public void callHability(GameCenter gameCenter, Player player, int index, Hability? hability)
+        {
+            System.Console.WriteLine($"El player {player} ejecutó la habilidad {index}: {hability}");
+
+        }
     }
 }

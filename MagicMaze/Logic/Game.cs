@@ -28,11 +28,30 @@ namespace Logic
             return doAction(GetCurrentPlayer(), direction);
         }
 
+        public bool currentPlayerActivatehability(int hability)
+        {
+            return activateHability(GetCurrentPlayer(), hability);
+        }
+
+        public bool activateHability(Player p, int hability)
+        {
+            if (p.canDoAction(hability, this))
+            {
+                var h = p.doAction(hability, this);
+                visual.callHability(this, p, hability, h);
+                this.visual.Refresh(this);
+                return true;
+            }
+            visual.canNotCallHability(this, p, hability, (hability >= 0 && hability < p.hability.Count) ? p.hability[hability] : null);
+            return false;
+        }
+
         public bool doAction(Player p, int direction)
         {
             var x = board.canMove(p, direction, this);
             if (x.HasValue)
             {
+                p.starPlay();
                 var pos = board.playerPosition[p.id];
                 int i = pos.Item1;
                 int j = pos.Item2;
@@ -57,6 +76,7 @@ namespace Logic
 
                 return true;
             }
+            visual.canNotMove(this, p, direction);
             return false;
 
         }

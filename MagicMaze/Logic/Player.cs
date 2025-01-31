@@ -14,6 +14,7 @@ namespace Logic
         public int number_of_play { get; set; }
         public List<(int, int)> path { get; set; }
         public List<Hability> hability { get; set; }
+
         public Player(char name = 'a', int id = 1, int speed = 1, int visibility = 1, bool remember = false)
         {
             this.name = name;
@@ -25,51 +26,86 @@ namespace Logic
             this.visibility = visibility;
             hability = new List<Hability>();
             number_of_play = 0;
+
+
         }
         public override string ToString()
         {
             return $"[{id}] {name} {speed} {visibility}";
         }
 
-        public void doAction()
+        public Hability? doAction(int i, GameCenter gc)
         {
+            if (canDoAction(i, gc))
+            {
 
+                hability[i].Do(this, gc);
+                return hability[i];
+            }
+            return null;
         }
-        public void starPlay(Player player, GameCenter gameCenter)
+
+        public bool canDoAction(int i, GameCenter gc)
+        {
+            if (i >= 0 && i < hability.Count && hability[i].canBeActive(this))
+            {
+                return true;
+            }
+            return false;
+        }
+
+
+        public void starPlay()
         {
             number_of_play++;
+            // foreach (var item in this.hability)
+            // {
+            //     item.checkExpired(this);
+            // }
+            for (int i = 0; i < hability.Count; i++)
+            {
+                var item = hability[i];
+                item.checkExpired(this);
+            }
         }
     }
-    public class PlayerExplorador : Player
+    public class PlayerExplorer : Player
     {
-        public PlayerExplorador(char name = 'E') : base(name, 1, 2, 2, false) { }
+        public PlayerExplorer(char name = 'E') : base(name, 1, 4, 1, false) { }
     }
-    public class PlayerBuho : Player
+    public class PlayerIntelligent : Player
     {
-        public PlayerBuho(char name = 'B') : base(name, 2, 2, 1, true) { }
+        public PlayerIntelligent(char name = 'B') : base(name, 2, 4, 1, true)
+        {
+            this.hability.Add(new HabilityVisibility());
+        }
     }
-    public class PlayerCorrecamino : Player
+    public class PlayerFast : Player
     {
-        public PlayerCorrecamino(char name = 'C') : base(name, 3, 3, 1, false) { }
+        public PlayerFast(char name = 'C') : base(name, 3, 4, 1, false) { }
     }
 
     public class Hability
     {
-        int lastActive = 0;
-        int lastOff = 0;
-        int TimeActive { get; set; }
-        int TimeOff { get; set; }
+        protected int lastActive = 0;
+        protected int lastOff = 0;
+
+        public bool active = false;
+        protected int TimeActive { get; set; }
+        protected int TimeOff { get; set; }
         public virtual void Do(Player player, GameCenter gameCenter)
         {
             lastActive = player.number_of_play;
+            active = true;
         }
         public virtual void Undo(Player player)
         {
+            active = false;
             lastOff = player.number_of_play;
         }
-        public virtual bool isActive(Player player)
+        public virtual bool canBeActive(Player player)
         {
-            if (lastOff + TimeOff <= player.number_of_play)
+            if (!active && lastOff + TimeOff <= player.number_of_play)
             {
                 return true;
             }
@@ -80,11 +116,38 @@ namespace Logic
         }
         public virtual void checkExpired(Player player)
         {
-            if (lastActive > 0 && lastActive + TimeActive < player.number_of_play)
+            if (lastActive > 0 && active && lastActive + TimeActive < player.number_of_play)
             {
                 Undo(player);
             }
         }
+        public Hability(int TimeActive = 0, int TimeOff = 0)
+        {
+            this.TimeActive = TimeActive;
+            this.TimeOff = TimeOff;
+        }
     }
 
+    public class HabilityVisibility : Hability
+    {
+        public HabilityVisibility() : base(2, 3)
+        {
+        }
+        public override void Do(Player player, GameCenter gameCenter)
+        {
+            player.visibility += 2;
+            base.Do(player, gameCenter);
+
+        }
+        public override void Undo(Player player)
+        {
+            player.visibility -= 2;
+            base.Undo(player);
+        }
+
+        public override string ToString()
+        {
+            return $"Vis + 2: e{this.TimeOff} a{this.TimeActive} ({this.lastOff}, {this.lastActive}) [{this.active}]";
+        }
+    }
 }
