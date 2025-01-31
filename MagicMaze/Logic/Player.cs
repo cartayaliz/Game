@@ -98,7 +98,6 @@ namespace Logic
             this.hability.Add(new HabilityVisibility());
         }
     }
-
     public class Hability
     {
         protected int lastActive = 0;
@@ -141,7 +140,6 @@ namespace Logic
             this.TimeOff = TimeOff;
         }
     }
-
     public class HabilityVisibility : Hability
     {
         public HabilityVisibility() : base(2, 3)
@@ -161,7 +159,7 @@ namespace Logic
 
         public override string ToString()
         {
-            return $"Vis + 2: e{this.TimeOff} a{this.TimeActive} ({this.lastOff}, {this.lastActive}) [{this.active}]";
+            return "2v";
         }
     }
     public class HabilityMemory : Hability
@@ -179,7 +177,7 @@ namespace Logic
         }
         public override string ToString()
         {
-            return $"Remember: e{this.TimeOff} a{this.TimeActive} ({this.lastOff}, {this.lastActive}) [{this.active}]";
+            return "1m";
         }
     }
     public class HabilitySpeed : Hability
@@ -198,7 +196,7 @@ namespace Logic
         }
         public override string ToString()
         {
-            return $"Speed: e{this.TimeOff} a{this.TimeActive} ({this.lastOff}, {this.lastActive}) [{this.active}]";
+            return "2s";
         }
     }
 }

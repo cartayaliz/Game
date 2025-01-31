@@ -1,7 +1,7 @@
 ﻿using Logic;
 
 
-BasicConsoleVisual game = new BasicConsoleVisual();
+SpectreConsoleVisual game = new SpectreConsoleVisual();
 
 var gc = GameBuilder.TestGame(game);
 
