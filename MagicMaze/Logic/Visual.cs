@@ -56,13 +56,13 @@ namespace Logic
                 }
                 else if (key.Key == ConsoleKey.Q)
                 {
-                    System.Console.WriteLine("call habl");
                     gc.currentPlayerActivatehability(0);
                 }
-                // else if (key.Key == ConsoleKey.E)
-                // {
+                else if (key.Key == ConsoleKey.Spacebar)
+                {
+                    gc.nextTurn();
+                }
 
-                // }
                 else
                 {
                     break;

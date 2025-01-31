@@ -71,18 +71,32 @@ namespace Logic
     }
     public class PlayerExplorer : Player
     {
-        public PlayerExplorer(char name = 'E') : base(name, 1, 4, 1, false) { }
+        public PlayerExplorer(char name = 'E') : base(name, 1, 4, 2, false) { this.hability.Add(new HabilitySpeed()); }
     }
     public class PlayerIntelligent : Player
     {
-        public PlayerIntelligent(char name = 'B') : base(name, 2, 4, 1, true)
+        public PlayerIntelligent(char name = 'I') : base(name, 2, 4, 1, true)
         {
             this.hability.Add(new HabilityVisibility());
         }
     }
     public class PlayerFast : Player
     {
-        public PlayerFast(char name = 'C') : base(name, 3, 4, 1, false) { }
+        public PlayerFast(char name = 'F') : base(name, 3, 6, 1, false) { this.hability.Add(new HabilityMemory()); }
+    }
+    public class PlayerAstute : Player
+    {
+        public PlayerAstute(char name = 'A') : base(name, 4, 4, 2, false)
+        {
+            this.hability.Add(new HabilityMemory());
+        }
+    }
+    public class PlayerObserver : Player
+    {
+        public PlayerObserver(char name = 'O') : base(name, 5, 4, 1, true)
+        {
+            this.hability.Add(new HabilityVisibility());
+        }
     }
 
     public class Hability
@@ -148,6 +162,43 @@ namespace Logic
         public override string ToString()
         {
             return $"Vis + 2: e{this.TimeOff} a{this.TimeActive} ({this.lastOff}, {this.lastActive}) [{this.active}]";
+        }
+    }
+    public class HabilityMemory : Hability
+    {
+        public HabilityMemory() : base(10, 3) { }
+        public override void Do(Player player, GameCenter gameCenter)
+        {
+            player.remember = true;
+            base.Do(player, gameCenter);
+        }
+        public override void Undo(Player player)
+        {
+            player.remember = false;
+            base.Undo(player);
+        }
+        public override string ToString()
+        {
+            return $"Remember: e{this.TimeOff} a{this.TimeActive} ({this.lastOff}, {this.lastActive}) [{this.active}]";
+        }
+    }
+    public class HabilitySpeed : Hability
+    {
+        public HabilitySpeed() : base(4, 5) { }
+        public override void Do(Player player, GameCenter gameCenter)
+        {
+            player.speed += 2;
+            base.Do(player, gameCenter);
+        }
+        public override void Undo(Player player)
+        {
+            player.speed -= 2;
+            base.Undo(player);
+
+        }
+        public override string ToString()
+        {
+            return $"Speed: e{this.TimeOff} a{this.TimeActive} ({this.lastOff}, {this.lastActive}) [{this.active}]";
         }
     }
 }

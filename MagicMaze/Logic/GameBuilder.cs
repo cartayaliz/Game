@@ -11,16 +11,20 @@ namespace Logic
 
 
             Player player1 = new PlayerIntelligent();
-            // Player player2 = new PlayerFast();
-            // Player player3 = new PlayerExplorer();
+            Player player2 = new PlayerFast();
+            Player player3 = new PlayerExplorer();
+            Player player4 = new PlayerAstute();
+            Player player5 = new PlayerObserver();
 
 
             Board board = new Board(10);
 
             board.setPlayer(0, 4, player1);
 
-            // board.setPlayer(4, 3, player2);
-            // board.setPlayer(2, 5, player3);
+            board.setPlayer(4, 3, player2);
+            board.setPlayer(2, 5, player3);
+            board.setPlayer(4, 8, player4);
+            board.setPlayer(5, 9, player5);
 
             board.matrix[0, 0] = new CellObs(0, 0);
             board.matrix[9, 9] = new CellWinn(9, 9);
@@ -30,7 +34,7 @@ namespace Logic
             board.matrix[1, 1] = new CellBridge(1, 1);
 
 
-            GameCenter gc = new GameCenter(board, new List<Player> { player1 }, visual);
+            GameCenter gc = new GameCenter(board, new List<Player> { player1, player2, player3, player4, player5 }, visual);
 
             return gc;
 
