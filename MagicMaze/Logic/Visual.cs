@@ -321,6 +321,9 @@ namespace Logic
             var table3 = new Table();
             table3.AddColumn(":> " + prompt);
 
+            var tabletitle = new Table();
+            tabletitle.AddColumn("[red] Emojis Mazer[/]");
+
             for (int i = 0; i < gameCenter.players.Count; i++)
             {
                 var p = gameCenter.players[i];
@@ -347,7 +350,7 @@ namespace Logic
                 table2.AddRow(p.id == player.id ? "[green] :check_mark: [/]" : "", playerName, p.visibility.ToString(), (speed).ToString(), AH, PH, OH);
             }
 
-
+            AnsiConsole.Write(tabletitle);
             AnsiConsole.Write(table);
             AnsiConsole.Write(table2);
             AnsiConsole.Write(table3);
