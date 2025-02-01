@@ -1,5 +1,5 @@
 # 1er proyecto de Programacion
-## Maze Runners
+## Emoji Maze Runners
 ### MATCOM - 2024-2025
 
 ---------------------------------

@@ -9,9 +9,11 @@ public class LogicTest
     public void ProjectInit()
     {
 
-        var gameCenter = new GameCenter(5);
-        Assert.Equal(5, gameCenter.number_of_players);
-        Assert.NotEqual(4, gameCenter.number_of_players);
+        BasicConsoleVisual game = new BasicConsoleVisual();
+        var gc = GameBuilder.TestGame(game);
+
+        Assert.Equal(5, gc.players.Count);
+        Assert.NotEqual(4, gc.players.Count);
 
     }
 
@@ -19,7 +21,9 @@ public class LogicTest
     public void ProjectSave()
     {
 
-        var gameCenter = new GameCenter(5);
-        Assert.NotNull(gameCenter);
+        BasicConsoleVisual game = new BasicConsoleVisual();
+        var gc = GameBuilder.TestGame(game);
+
+        Assert.NotNull(gc);
     }
 }

@@ -25,7 +25,7 @@ namespace Logic
 
     }
 
-    class BasicConsoleVisual : IVisual
+    public class BasicConsoleVisual : IVisual
     {
 
         public void Init(GameCenter gameCenter)
