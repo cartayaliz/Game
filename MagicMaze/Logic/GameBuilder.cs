@@ -129,18 +129,8 @@ namespace Logic
 
 
 
-        public static GameCenter CreateGame(IVisual visual, int n)
+        public static GameCenter CreateGame(IVisual visual, Player[] players, int n)
         {
-
-
-            Player[] players = {
-                new PlayerIntelligent(),
-                new PlayerFast(),
-                // new PlayerExplorer(),
-                // new PlayerAstute(),
-                // new PlayerObserver(),
-            };
-
 
             Board board = new Board(n);
 
@@ -162,7 +152,7 @@ namespace Logic
             {
                 Cell celd;
                 var item = celdPos[i];
-                var rd = Random.Shared.Next(0, 3);
+                var rd = Random.Shared.Next(0, 4);
                 if (rd == 0) celd = new CellSpeed1(item.Item1, item.Item2);
                 else if (rd == 1) celd = new CellSpeed2(item.Item1, item.Item2);
                 else if (rd == 2) celd = new CellVision(item.Item1, item.Item2);

@@ -6,6 +6,9 @@ namespace Logic
     public class Player
     {
         public char name { get; set; }
+
+        public string user = "";
+
         public int id { get; set; }
         public bool remember { get; set; }
         public bool isWinner { get; set; }
@@ -58,10 +61,6 @@ namespace Logic
         public void starPlay()
         {
             number_of_play++;
-            // foreach (var item in this.hability)
-            // {
-            //     item.checkExpired(this);
-            // }
             for (int i = 0; i < hability.Count; i++)
             {
                 var item = hability[i];

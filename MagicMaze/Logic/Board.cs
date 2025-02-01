@@ -91,7 +91,7 @@ namespace Logic
             if (!used)
             {
                 used = true;
-                this.id = "X";
+                this.id = "x";
             }
         }
     }

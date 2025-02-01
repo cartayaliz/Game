@@ -39,7 +39,6 @@ namespace Logic
             {
                 var h = p.doAction(hability, this);
                 visual.callHability(this, p, hability, h);
-                this.visual.Refresh(this);
                 return true;
             }
             visual.canNotCallHability(this, p, hability, (hability >= 0 && hability < p.hability.Count) ? p.hability[hability] : null);
