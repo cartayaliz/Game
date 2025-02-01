@@ -10,10 +10,12 @@
 
 ##### Commands
 
-* Run Game `dotnet run --project=.\MagicMaze\Logic\`
+* Run Logic `dotnet run --project=.\MagicMaze\Logic\`
+* Run Game `dotnet run --project=.\MagicMaze\ConsoleGame\`
 
-* Cleaning `dotnet clean --project=.\MagicMaze\Logic\ `
-* Restore `dotnet restore --project=.\MagicMaze\Logic\ `
+
+* Cleaning `dotnet clean --project=.\MagicMaze\ConsoleGame\ `
+* Restore `dotnet restore --project=.\MagicMaze\ConsoleGame\ `
 
 
 ## Acerca del juego

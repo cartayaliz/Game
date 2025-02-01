@@ -1,20 +1,11 @@
 ﻿using Logic;
 
 
-SpectreConsoleVisual game = new SpectreConsoleVisual();
-
-// var players = new Player[]{
-//     new PlayerIntelligent(),
-//     new PlayerFast(),
-//     new PlayerExplorer(),
-//     new PlayerAstute(),
-//     new PlayerObserver(),
-// };
+BasicConsoleVisual game = new BasicConsoleVisual();
 
 
 
-
-var gc = GameBuilder.CreateGame(game, game.players.ToArray(), game.N);
+var gc = GameBuilder.TestGame(game);
 
 game.Play(gc);
 

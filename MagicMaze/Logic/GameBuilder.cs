@@ -195,7 +195,6 @@ namespace Logic
             Board board = new Board(10);
 
             board.setPlayer(0, 4, player1);
-
             board.setPlayer(4, 3, player2);
             board.setPlayer(2, 5, player3);
             board.setPlayer(4, 8, player4);
