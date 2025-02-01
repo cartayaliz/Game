@@ -1,12 +1,56 @@
 using System;
 using System.Collections;
+using System.Security.AccessControl;
+using Spectre.Console.Rendering;
 
 namespace Logic
 {
     public class GameBuilder
     {
+        public static void ExpandR(bool[,] Obs, bool[,] Mark, int i, int j)
+        {
+            Mark[i, j] = true;
+            int[] dx = { 1, -1, 0, 0 };
+            int[] dy = { 0, 0, 1, -1 };
 
-        public static List<(int, int)[]> Generate(int playerCount, int n, int specialCeldCount)
+            for (int k = 0; k < dx.Length; k++)
+            {
+                int ni = i + dx[k];
+                int nj = j + dy[k];
+
+                if (ni >= 0 && nj >= 0 && ni < Obs.GetLength(0) && nj < Obs.GetLength(1) && !Mark[ni, nj] && !Obs[ni, nj])
+                {
+                    ExpandR(Obs, Mark, ni, nj);
+                }
+            }
+
+        }
+
+        public static bool[,] Expande(bool[,] Obs, int i, int j)
+        {
+            bool[,] Mark = new bool[Obs.GetLength(0), Obs.GetLength(1)];
+
+            ExpandR(Obs, Mark, i, j);
+
+            return Mark;
+
+        }
+
+        public static bool CanPutObs(bool[,] Obs, int mi, int mj, List<(int, int)> players)
+        {
+            var mark = Expande(Obs, mi, mj);
+
+            foreach (var p in players)
+            {
+                if (!mark[p.Item1, p.Item2]) return false;
+            }
+            return true;
+
+        }
+
+
+
+        public static List<(int, int)[]> Generate(int playerCount, int n, int specialCeldCount, int obsCount)
         {
             var solve = new List<(int, int)[]>();
             List<(int, int)> posiblePoint = new List<(int, int)>();
@@ -22,12 +66,15 @@ namespace Logic
             Random.Shared.Shuffle(array);
             int idx = 0;
 
+            var celdConected = new List<(int, int)>();
+
             // create random player position
             var players = new (int, int)[playerCount];
 
             for (int i = 0; i < playerCount; i++)
             {
                 players[i] = array[idx];
+                celdConected.Add(array[idx]);
                 idx++;
             }
 
@@ -36,6 +83,7 @@ namespace Logic
             for (int i = 0; i < specialCeldCount; i++)
             {
                 celds[i] = array[idx];
+                celdConected.Add(array[idx]);
                 idx++;
             }
 
@@ -43,13 +91,42 @@ namespace Logic
 
             solve.Add(players);
             solve.Add(celds);
-            solve.Add(new (int, int)[] { array[idx++] });
+            celdConected.Add(array[idx]);
+            var meta = array[idx++];
+            solve.Add(new (int, int)[] { meta });
+
+
+            // Create obs
+
+            bool[,] obs = new bool[n, n];
+            List<(int, int)> obsPos = new List<(int, int)>();
+
+            while (obsCount > 0 && idx < array.Length)
+            {
+                var pos = array[idx++];
+
+                obs[pos.Item1, pos.Item2] = true;
+
+                if (CanPutObs(obs, meta.Item1, meta.Item2, celdConected))
+                {
+                    obsCount--;
+                    obsPos.Add(pos);
+                }
+                else
+                {
+                    obs[pos.Item1, pos.Item2] = false;
+                }
+            }
+
+            solve.Add(obsPos.ToArray());
 
 
             return solve;
 
 
         }
+
+
 
 
         public static GameCenter CreateGame(IVisual visual, int n)
@@ -59,15 +136,15 @@ namespace Logic
             Player[] players = {
                 new PlayerIntelligent(),
                 new PlayerFast(),
-                new PlayerExplorer(),
-                new PlayerAstute(),
-                new PlayerObserver(),
+                // new PlayerExplorer(),
+                // new PlayerAstute(),
+                // new PlayerObserver(),
             };
 
 
             Board board = new Board(n);
 
-            var generatePos = Generate(5, n, (n * n) / 10);
+            var generatePos = Generate(players.Length, n, (n * n) / 10, (n * n) / 5);
 
             //Create  PlayerPositions
 
@@ -99,6 +176,14 @@ namespace Logic
             {
                 var item = winPos[i];
                 board.matrix[item.Item1, item.Item2] = new CellWinn(item.Item1, item.Item2);
+            }
+
+            // Create Position of Obs
+            var obsPos = generatePos[3];
+            for (int i = 0; i < obsPos.Length; i++)
+            {
+                var item = obsPos[i];
+                board.matrix[item.Item1, item.Item2] = new CellObs(item.Item1, item.Item2);
             }
 
             GameCenter gc = new GameCenter(board, new List<Player>(players), visual);
