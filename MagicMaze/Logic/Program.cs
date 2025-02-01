@@ -3,7 +3,7 @@
 
 SpectreConsoleVisual game = new SpectreConsoleVisual();
 
-var gc = GameBuilder.TestGame(game);
+var gc = GameBuilder.CreateGame(game, 20);
 
 game.Play(gc);
 

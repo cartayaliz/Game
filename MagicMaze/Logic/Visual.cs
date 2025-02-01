@@ -246,7 +246,7 @@ namespace Logic
                 for (int j = 0; j < n; j++)
                 {
 
-                    if (visible[i, j])
+                    if (true || visible[i, j])
                     {
                         var cellContent = gameCenter.board.matrix[i, j].ToString();
                         var column = contentMap.ContainsKey(cellContent)
