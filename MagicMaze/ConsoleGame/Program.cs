@@ -24,11 +24,20 @@ public class SpectreConsoleVisual : IVisual
         AnsiConsole.Clear();
         AnsiConsole.Markup("[underline red]Welcome !!! \n[/]");
 
-        N = AnsiConsole.Prompt(new TextPrompt<int>("Board size? "));
+        N = AnsiConsole.Prompt(new TextPrompt<int>("Board size? ").Validate(ValidateN));
+
+        ValidationResult ValidateN(int n)
+        {
+            if (n <= 1) return ValidationResult.Error("[red]El tamaño del tablero debe ser al menos 2.[/]");
+            return ValidationResult.Success();
+        }
 
         ValidationResult ValidateNumberOfPlayer(int n)
         {
-            return n > 5 ? ValidationResult.Error("Too much") : ValidationResult.Success();
+            if (n > 5) return ValidationResult.Error("[red]Too much.[/]");
+            else if (n <= 0) return ValidationResult.Error("[red]Introduzca una cantidad válida de jugadores.[/]");
+            return ValidationResult.Success();
+
         }
 
         var playerCount = AnsiConsole.Prompt(new TextPrompt<int>("Number of player?").Validate(ValidateNumberOfPlayer));
