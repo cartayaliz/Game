@@ -1,6 +1,7 @@
 ﻿using Logic;
 using Spectre.Console;
 using Spectre.Console.Rendering;
+using System.Threading.Tasks;
 
 SpectreConsoleVisual game = new SpectreConsoleVisual();
 
@@ -80,7 +81,8 @@ public class SpectreConsoleVisual : IVisual
         {"=", ":bridge_at_night:"},
         {"2s", ":oncoming_police_car:"},
         {"1m", ":camera: "},
-        {"2v", ":eyes: "}
+        {"2v", ":eyes: "},
+        {"+",  ":triangular_flag:"}
     };
     public void Play(GameCenter gc)
     {
@@ -130,10 +132,12 @@ public class SpectreConsoleVisual : IVisual
         Refresh(gameCenter);
     }
 
-    public void Winning(GameCenter gameCenter, Player player)
+    public async void Winning(GameCenter gameCenter, Player player)
     {
         if (player.isWinner)
         {
+            await MostrarAnimacionGanador(player);
+
             prompt = $"{player.name} {player.user} is the winner!!";
             Refresh(gameCenter);
         }
@@ -142,6 +146,18 @@ public class SpectreConsoleVisual : IVisual
             prompt = " Empate ";
             Refresh(gameCenter);
         }
+    }
+
+    private async Task MostrarAnimacionGanador(Player player)
+    {
+        // Mostrar la animación durante unos segundos
+        for (int i = 0; i < 80; i++)
+        {
+            AnsiConsole.MarkupLine($"[italic underline red on white]¡Felicidades, {player.user} has ganado! :party_popper: :party_popper: :party_popper: [/]");
+            Thread.Sleep(200); // Pausa corta
+            AnsiConsole.Clear(); // Borra la línea anterior
+        }
+
     }
     public void Refresh(GameCenter gameCenter)
     {

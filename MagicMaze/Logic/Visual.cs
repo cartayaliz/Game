@@ -86,12 +86,17 @@ namespace Logic
         {
             if (player.isWinner)
             {
+
                 Console.WriteLine($"{player} es el ganador!!!");
             }
             else
             {
                 System.Console.WriteLine("Empate");
             }
+        }
+        private async Task MostrarAnimacionGanador(Player player)
+        {
+            Console.WriteLine($"¡Felicidades, {player.user} has ganado![/]");
         }
         public void Refresh(GameCenter gameCenter)
         {
