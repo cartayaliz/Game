@@ -120,6 +120,10 @@ namespace Logic
             return false;
         }
     }
+    public class CellVision2 : CellVision
+    {
+        public CellVision2(int x, int y) : base(x, y, -1, "%") { }
+    }
     public class Board
     {
         public int n { get; set; }

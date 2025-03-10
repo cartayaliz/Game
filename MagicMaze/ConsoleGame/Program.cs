@@ -20,7 +20,6 @@ public class SpectreConsoleVisual : IVisual
 
     public SpectreConsoleVisual()
     {
-        // AnsiConsole.Console.Input.
         AnsiConsole.Clear();
         AnsiConsole.Markup("[underline red]Welcome !!! \n[/]");
 
@@ -28,7 +27,7 @@ public class SpectreConsoleVisual : IVisual
 
         ValidationResult ValidateN(int n)
         {
-            if (n <= 1) return ValidationResult.Error("[red]El tamaño del tablero debe ser al menos 2.[/]");
+            if (n <= 4) return ValidationResult.Error("[red]El tamaño del tablero debe ser al menos 5.[/]");
             return ValidationResult.Success();
         }
 
@@ -91,7 +90,8 @@ public class SpectreConsoleVisual : IVisual
         {"2s", ":oncoming_police_car:"},
         {"1m", ":camera: "},
         {"2v", ":eyes: "},
-        {"+",  ":triangular_flag:"}
+        {"+",  ":triangular_flag:"},
+        {"%", ":magnifying_glass_tilted_left:"}
     };
     public void Play(GameCenter gc)
     {
@@ -148,7 +148,7 @@ public class SpectreConsoleVisual : IVisual
             await MostrarAnimacionGanador(player);
 
             prompt = $"{player.name} {player.user} is the winner!!";
-            Refresh(gameCenter);
+            Environment.Exit(0);
         }
         else
         {
@@ -160,9 +160,9 @@ public class SpectreConsoleVisual : IVisual
     private async Task MostrarAnimacionGanador(Player player)
     {
         // Mostrar la animación durante unos segundos
-        for (int i = 0; i < 80; i++)
+        for (int i = 0; i < 30; i++)
         {
-            AnsiConsole.MarkupLine($"[italic underline red on white]¡Felicidades, {player.user} has ganado! :party_popper: :party_popper: :party_popper: [/]");
+            AnsiConsole.MarkupLine($"[italic red on white]¡Felicidades, {player.user} has ganado! :party_popper: :party_popper: :party_popper: [/]");
             Thread.Sleep(200); // Pausa corta
             AnsiConsole.Clear(); // Borra la línea anterior
         }

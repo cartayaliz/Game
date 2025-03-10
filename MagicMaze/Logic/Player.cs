@@ -163,7 +163,7 @@ namespace Logic
     }
     public class HabilityMemory : Hability
     {
-        public HabilityMemory() : base(10, 3) { }
+        public HabilityMemory() : base(7, 3) { }
         public override void Do(Player player, GameCenter gameCenter)
         {
             player.remember = true;

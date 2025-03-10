@@ -40,6 +40,14 @@ namespace Logic
         {
             var mark = Expande(Obs, mi, mj);
 
+            for (int i = 0; i < Obs.GetLength(0); i++)
+            {
+                for (int j = 0; j < Obs.GetLength(1); j++)
+                {
+                    if (!Obs[i, j] && !mark[i, j]) return false;
+                }
+            }
+
             foreach (var p in players)
             {
                 if (!mark[p.Item1, p.Item2]) return false;
@@ -152,10 +160,11 @@ namespace Logic
             {
                 Cell celd;
                 var item = celdPos[i];
-                var rd = Random.Shared.Next(0, 4);
+                var rd = Random.Shared.Next(0, 5);
                 if (rd == 0) celd = new CellSpeed1(item.Item1, item.Item2);
                 else if (rd == 1) celd = new CellSpeed2(item.Item1, item.Item2);
                 else if (rd == 2) celd = new CellVision(item.Item1, item.Item2);
+                else if (rd == 3) celd = new CellVision2(item.Item1, item.Item2);
                 else celd = new CellBridge(item.Item1, item.Item2);
                 board.matrix[item.Item1, item.Item2] = celd;
             }
